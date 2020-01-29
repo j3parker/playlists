@@ -119,7 +119,7 @@ class Client:
                     'description': description,
                 },
                 'status': {
-                    'privacystatus': privacy_status,
+                    'privacyStatus': privacy_status,
                 },
             },
         ).execute()['id']
