@@ -1,3 +1,3 @@
 FROM ubuntu
-RUN apt-get install vim pip3 git
+RUN apt-get update && apt-get install -y vim python3-pip git
 WORKDIR /git/src
