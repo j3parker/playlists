@@ -3,6 +3,7 @@ on:
   push:
     branches:
     - master
+  pull_request:
 jobs:
   sync:
     name: Sync to YouTube
@@ -19,3 +20,7 @@ jobs:
         pip install -r src/requirements.txt
     - name: Make it so
       run: python src/sync.py
+      env:
+        OAUTH_CLIENT_ID: ${{ secrets.OAUTH_CLIENT_ID }}
+        OAUTH_CLIENT_SECRET: ${{ secrets.OAUTH_CLIENT_SECRET }}
+        REFRESH_TOKEN: ${{ secrets.REFRESH_TOKEN }}
