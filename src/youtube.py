@@ -60,7 +60,7 @@ class Client:
             for item in response['items']
         ]
 
-    def apply(op):
+    def apply(self, op):
         # TODO
         return
 
