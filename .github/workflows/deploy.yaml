@@ -2,12 +2,20 @@ name: "Sync to YouTube"
 on:
   push:
     branches:
-      - master
+    - master
 jobs:
   sync:
-    name: "Sync to YouTube"
+    name: Sync to YouTube
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v2
-      - run: pip3 install -r src/requirements.txt
-      - run: python3 src/sync.py
+    - uses: actions/checkout@v2
+    - name: Set up python
+      uses: actions/setup-python@v1
+      with:
+        python-version: 3.8
+    - name: Install dependencies
+      run: |
+        python -m pip install --upgrade pip
+        pip install -r src/requirements.txt
+    - name: Make it so
+      run: python src/sync.py
