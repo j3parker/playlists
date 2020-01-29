@@ -62,6 +62,7 @@ class Client:
             )
 
             self.placeholder_map[op.id.nonce] = new_id
+            print(f'Remembering that {op.id} -> {new_id}')
 
         elif isinstance(op, model.OpUpdatePlaylistMetadata):
             self.update_playlist(
