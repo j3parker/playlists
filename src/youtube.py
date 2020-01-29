@@ -28,11 +28,7 @@ class Client:
         return Client(client)
 
     def get_playlists(self):
-        response = self.client.playlists().list(
-            part = 'snippet,status',
-            mine = True,
-            maxResults = 50,
-        ).execute()
+        response = self.list_playlists()
 
         return [
             model.Playlist(
@@ -46,11 +42,7 @@ class Client:
         ]
 
     def get_playlistitems(self, id):
-        response = self.client.playlistItems().list(
-            part = 'contentDetails',
-            playlistId = id,
-            maxResults = 50,
-        ).execute()
+        response = self.list_playlistitems(id)
 
         return [
             model.PlaylistItem(
@@ -61,8 +53,104 @@ class Client:
         ]
 
     def apply(self, op):
-        # TODO
-        return
+        if isinstance(op, model.OpNewPlaylist):
+            new_id = self.insert_playlist(
+                title = op.title,
+                description = op.description,
+                privacy_status = 'public',
+            )
 
+            self.placeholder_map[op.id.nonce] = new_id
 
+        elif isinstance(op, model.OpUpdatePlaylistMetadata):
+            self.update_playlist(
+                id = op.id,
+                title = op.title,
+                description = op.description,
+            )
 
+        elif isinstance(op, model.OpDeletePlaylist):
+            self.delete_playlist(
+                id = op.id,
+            )
+
+        elif isinstance(op, model.OpAddToPlaylist):
+            if isinstance(op.id, op.PlaceholderId):
+                id = self.placeholder_map[op.id.nonce]
+            else:
+                id = op.id
+
+            self.insert_playlistitem(
+                playlist_id = id,
+                video_id = op.video_id,
+                position = op.position,
+            )
+
+        elif isinstance(op, model.ReorderPlaylistItem):
+            self.update_playlistitem(
+                playlist_id = op.playlist_id,
+                video_id = op.video_id,
+                position = op.position,
+            )
+
+        elif isinstance(op, model.RemoveFromPlaylist):
+            self.delete_playlistitem(
+                playlist_id = op.playlist_id,
+                video_id = op.video_id,
+            )
+
+        else:
+            raise Exception('unimplemented operation')
+
+    def list_playlists(self):
+        return self.client.playlists().list(
+            part = 'snippet,status',
+            mine = True,
+            maxResults = 50,
+        ).execute()
+
+    def insert_playlist(self, title, description, privacy_status):
+        return self.client.playlists().insert(
+            part = 'snippet',
+            body = {
+                'snippet': {
+                    'title': title,
+                    'description': description,
+                    'privacystatus': privacy_status,
+                },
+            },
+        ).execute()['id']
+
+    def update_playlist(self, id, title, description):
+        raise Exception('unimplemented')
+
+    def delete_playlist(self, id):
+        raise Exception('unimplemented')
+
+    def list_playlistitems(self, id):
+        self.client.playlistItems().list(
+            part = 'contentDetails',
+            playlistId = id,
+            maxResults = 50,
+        ).execute()
+
+    def insert_playlistitem(self, playlist_id, video_id, position):
+        self.client.playlistItems().insert(
+            part = 'snippet',
+            body = {
+                'snippet': {
+                    'playlistId': playlist_id,
+                    'resourceId': {
+                        'kind': 'youtube#video',
+                        'videoId': video_id,
+                    },
+                    'position': position,
+                },
+            },
+        ).execute()
+
+    def update_playlistitem(self, playlist_id, video_id, position):
+        raise Exception('unimplemented')
+
+    def delete_playlistitem(self, playlist_id, video_id):
+        raise Exception('unimplemented')
