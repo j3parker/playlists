@@ -82,7 +82,7 @@ class Client:
             else:
                 playlist_id = op.playlist_id
 
-            print(f'adding {video_id} to {playlist_id}')
+            print(f'adding {op.video_id} to {playlist_id}')
 
             self.insert_playlistitem(
                 playlist_id = playlist_id,
