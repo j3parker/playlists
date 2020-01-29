@@ -112,11 +112,13 @@ class Client:
 
     def insert_playlist(self, title, description, privacy_status):
         return self.client.playlists().insert(
-            part = 'snippet',
+            part = 'snippet,status',
             body = {
                 'snippet': {
                     'title': title,
                     'description': description,
+                },
+                'status': {
                     'privacystatus': privacy_status,
                 },
             },
