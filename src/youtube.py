@@ -77,12 +77,12 @@ class Client:
 
         elif isinstance(op, model.OpAddToPlaylist):
             if isinstance(op.id, op.PlaceholderId):
-                id = self.placeholder_map[op.id.nonce]
+                playlist_id = self.placeholder_map[op.playlist_id.nonce]
             else:
-                id = op.id
+                playlist_id = op.playlist_id
 
             self.insert_playlistitem(
-                playlist_id = id,
+                playlist_id = playlist_id,
                 video_id = op.video_id,
                 position = op.position,
             )
