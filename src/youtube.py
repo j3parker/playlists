@@ -76,7 +76,7 @@ class Client:
             )
 
         elif isinstance(op, model.OpAddToPlaylist):
-            if isinstance(op.id, op.PlaceholderId):
+            if isinstance(op, op.PlaceholderId):
                 playlist_id = self.placeholder_map[op.playlist_id.nonce]
             else:
                 playlist_id = op.playlist_id
