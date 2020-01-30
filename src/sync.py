@@ -12,8 +12,6 @@ def main(source_dir, dry_run = True):
     yt = youtube.Client.from_environment()
     actual = yt.get_playlists()
 
-    print(expected)
-    print(actual)
     print('Calculating difference...')
     ops = list(differ.diff_playlists(expected, actual))
 
@@ -25,6 +23,7 @@ def main(source_dir, dry_run = True):
     print('This is what we\'re going to do:')
     print('')
     for op in ops:
+	print(op)
         print('')
 
     if dry_run:
