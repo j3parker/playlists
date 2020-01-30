@@ -5,7 +5,7 @@ def diff_playlists(expected, actual):
 
     for (exp, act) in matched_playlists:
         if exp.title != act.title or exp.description != act.description:
-            yield model.UpdatePlaylistMetadata(
+            yield model.OpUpdatePlaylistMetadata(
                 playlist_id = act.playlist_id,
                 title = exp.title,
                 description = exp.description
