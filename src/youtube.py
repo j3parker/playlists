@@ -47,8 +47,10 @@ class Client:
 
         return [
             model.PlaylistItem(
-                id = item['id'],
-                video = item['contentDetails']['videoId'],
+                item['id'],
+                item['snippet']['playlistId'],
+                item['contentDetails']['videoId'],
+                item['snippet']['position'],
             )
             for item in response['items']
         ]
@@ -61,19 +63,19 @@ class Client:
                 privacy_status = 'public',
             )
 
-            self.placeholder_map[op.id.nonce] = new_id
-            print(f'Remembering that {op.id} -> {new_id}')
+            self.placeholder_map[op.playlist_id.nonce] = new_id
+            print(f'Remembering that {op.playlist_id} -> {new_id}')
 
         elif isinstance(op, model.OpUpdatePlaylistMetadata):
             self.update_playlist(
-                id = op.id,
+                playlist_id = op.playlist_id,
                 title = op.title,
                 description = op.description,
             )
 
         elif isinstance(op, model.OpDeletePlaylist):
             self.delete_playlist(
-                id = op.id,
+                playlist_id = op.playlist_id,
             )
 
         elif isinstance(op, model.OpAddToPlaylist):
@@ -88,18 +90,16 @@ class Client:
                 position = op.position,
             )
 
-        elif isinstance(op, model.ReorderPlaylistItem):
+        elif isinstance(op, model.OpReorderPlaylistItem):
             self.update_playlistitem(
+                item_id = op.item_id,
                 playlist_id = op.playlist_id,
                 video_id = op.video_id,
                 position = op.position,
             )
 
-        elif isinstance(op, model.RemoveFromPlaylist):
-            self.delete_playlistitem(
-                playlist_id = op.playlist_id,
-                video_id = op.video_id,
-            )
+        elif isinstance(op, model.OpRemoveFromPlaylist):
+            self.delete_playlistitem(op.playlist_id)
 
         else:
             raise Exception('unimplemented operation')
@@ -126,14 +126,23 @@ class Client:
         ).execute()['id']
 
     def update_playlist(self, id, title, description):
-        raise Exception('unimplemented')
+        self.client.playlists.update(
+            id = id,
+            part = 'snippet',
+            body = {
+                'snippet': {
+                    'title': title,
+                    'description': description,
+                },
+            },
+        ).execute()
 
     def delete_playlist(self, id):
-        raise Exception('unimplemented')
+        self.client.playlists().delete(id).execute()
 
     def list_playlistitems(self, id):
-        self.client.playlistItems().list(
-            part = 'contentDetails',
+        return self.client.playlistItems().list(
+            part = 'contentDetails,snippet',
             playlistId = id,
             maxResults = 50,
         ).execute()
@@ -153,8 +162,21 @@ class Client:
             },
         ).execute()
 
-    def update_playlistitem(self, playlist_id, video_id, position):
-        raise Exception('unimplemented')
+    def update_playlistitem(self, item_id, playlist_id, video_id, position):
+        self.client.playlistItems().update(
+            part = 'snippet',
+            body = {
+                'id': item_id,
+                'snippet': {
+                    'playlistId': playlist_id,
+                    'resourceId': {
+                        'kind': 'youtube#video',
+                        'videoId': video_id,
+                    },
+                    'position': position,
+                },
+            },
+        ).execute()
 
-    def delete_playlistitem(self, playlist_id, video_id):
-        raise Exception('unimplemented')
+    def delete_playlistitem(self, item_id):
+        self.client.playlistItems().delete(item_id).execute()

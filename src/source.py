@@ -21,13 +21,20 @@ class Client:
         return playlists
 
 def parse_playlist(doc):
+    playlist_id = doc.get('id')
+
     return model.Playlist(
-        id = None,
-        title = doc['title'],
-        description = doc['description'],
+        playlist_id,
+        doc['title'],
+        doc['description'],
         items = [
-            model.PlaylistItem(None, parse_video_id_from_url(track))
-            for track in doc['tracks']
+            model.PlaylistItem(
+                None,
+                playlist_id,
+                parse_video_id_from_url(track),
+                idx
+            )
+            for (idx, track) in enumerate(doc['tracks'])
         ],
     )
 
