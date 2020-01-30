@@ -26,7 +26,7 @@ def diff_playlists(expected, actual):
         for item in playlist.items:
             yield model.OpAddToPlaylist(
                 id,
-                item.video,
+                item.video_id,
                 item.position,
             )
 
