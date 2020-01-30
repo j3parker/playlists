@@ -126,7 +126,7 @@ class Client:
         ).execute()['id']
 
     def update_playlist(self, playlist_id, title, description):
-        self.client.playlists.update(
+        self.client.playlists().update(
             id = playlist_id,
             part = 'snippet',
             body = {
