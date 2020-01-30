@@ -125,9 +125,9 @@ class Client:
             },
         ).execute()['id']
 
-    def update_playlist(self, id, title, description):
+    def update_playlist(self, playlist_id, title, description):
         self.client.playlists.update(
-            id = id,
+            id = playlist_id,
             part = 'snippet',
             body = {
                 'snippet': {
@@ -137,8 +137,8 @@ class Client:
             },
         ).execute()
 
-    def delete_playlist(self, id):
-        self.client.playlists().delete(id).execute()
+    def delete_playlist(self, playlist_id):
+        self.client.playlists().delete(playlist_id).execute()
 
     def list_playlistitems(self, id):
         return self.client.playlistItems().list(
