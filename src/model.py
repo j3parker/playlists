@@ -30,7 +30,7 @@ class PlaceholderId(typing.NamedTuple):
         return f'(new playlist {self.nonce})'
 
 class OpNewPlaylist(typing.NamedTuple):
-    id: PlaceholderId
+    playlist_id: PlaceholderId
     title: str
     description: str
 
