@@ -25,7 +25,6 @@ def main(source_dir, dry_run = True):
     print('This is what we\'re going to do:')
     print('')
     for op in ops:
-        print(op)
         print('')
 
     if dry_run:
