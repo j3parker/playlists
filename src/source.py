@@ -26,7 +26,7 @@ def parse_playlist(doc):
     return model.Playlist(
         playlist_id,
         doc['title'],
-        doc['description'],
+        doc['description'] or "",
         items = [
             model.PlaylistItem(
                 None,
