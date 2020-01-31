@@ -83,10 +83,8 @@ class OpReorderPlaylistItem(typing.NamedTuple):
     position: {self.position}'''
 
 class OpRemoveFromPlaylist(typing.NamedTuple):
-    playlist_id: str
     item_id: str
 
     def __repr__(self):
         return f'''Remove a track from a playlist.
-    playlist_id: {self.playlist_id}
     item_id: {self.item_id}'''
