@@ -73,10 +73,7 @@ def diff_tracks(expected, actual):
         )
 
     for track in deleted_tracks:
-        yield model.OpRemoveFromPlaylist(
-            track.playlist_id,
-            track.item_id
-        )
+        yield model.OpRemoveFromPlaylist(track.item_id)
 
 def match_tracks(expected, actual):
     expected_video_ids = {}
