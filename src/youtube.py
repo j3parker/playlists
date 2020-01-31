@@ -99,7 +99,7 @@ class Client:
             )
 
         elif isinstance(op, model.OpRemoveFromPlaylist):
-            self.delete_playlistitem(op.playlist_id)
+            self.delete_playlistitem(op.item_id)
 
         else:
             raise Exception('unimplemented operation')
