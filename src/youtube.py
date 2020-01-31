@@ -181,5 +181,5 @@ class Client:
     def delete_playlistitem(self, item_id):
         wut = self.client
         wut2 = wut.playlistItems()
-        wut3 = wut2.delete(item_id)
+        wut3 = wut2.delete(id = item_id)
         wut3.execute()
